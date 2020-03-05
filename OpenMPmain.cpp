@@ -7,26 +7,30 @@
 #include <iostream>
 #include <ctime>
 #include "matrixTransposeNaive.cpp"
+#include "matrixBlockTransposeOpenMP.cpp"
 
 using namespace std;
 
+// void swop(int* num1, int* num2)
+// {
+//     *num1 = *num1 + *num2;
+//     *num2 = *num1 - *num2;
+//     *num1 = *num1 - *num2; 
+
+// }
+
 int main()
 {
-    auto matrixSize = 1024;
+    auto matrixSize = 8;
     auto matrixA = vector<vector<int>>{};
     auto colVec = vector<int>{};
     auto num = 0;
     double wtime;
 
-    wtime = omp_get_wtime ( );  //Start timing
-
     srand(47);
 
-    #pragma parellel for shared(matrixA, colVec, row, col)
-    {
         for(auto row = 0; row < matrixSize ; ++row)
         {
-            // #pragma parellel for
             for(auto col = 0; col < matrixSize ; ++col)
             {
                 colVec.push_back(rand()%20);
@@ -36,15 +40,21 @@ int main()
             colVec.erase(colVec.begin(), colVec.end());
             cout << endl;
         }
-    }
 
-    wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+    // wtime = omp_get_wtime ( ) - wtime;  // Stop timing
 
-        //cout << omp_get_max_threads ( ) << endl;
-    cout << "Time to transpose a N = " << matrixSize  << " matrix : " <<  wtime <<  " s." << endl;
-        cout << "Transposed Matrix" << endl;
+    //     //cout << omp_get_max_threads ( ) << endl;
+    
+    // cout << "Transposed Matrix" << endl;
 
-    MatrixTransposeNaive(&matrixA);
+    // wtime = omp_get_wtime ( );  //Start timing
+    
+    // MatrixTransposeNaive(&matrixA);
+
+    // cout << "Time to transpose a N = " << matrixSize  << " matrix : " <<  wtime <<  " s." << endl;
+    // wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+
+    blockTransposeOpenMP(&matrixA);
 
     return 0;
 }
