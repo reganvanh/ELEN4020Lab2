@@ -28,21 +28,7 @@ void MatrixTransposeNaive( vector<vector<int>>* tempMatrix )
                 swop(&(*tempMatrix)[row][col], &(*tempMatrix)[col][row]);
                 ++col;
             }
-            cout << endl;
         }
     }
-
-
-    // for(auto row = 0; row < N ; ++row)
-    // {
-    //     col = 0;
-    //     while(col < N)
-    //     {
-    //         cout << (*tempMatrix)[row][col] << " ";
-    //         ++col;
-    //     }
-    //     cout << endl;
-    // }
-
 
 }
