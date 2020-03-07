@@ -18,7 +18,7 @@ void MatrixTransposeNaive( vector<vector<int>>* tempMatrix )
 {
     auto col = 0;
     auto N = (tempMatrix->size ());
-    #pragma parellel for shared(matrixA, colVec, row, col)
+    #pragma omp parellel for shared(matrixA, colVec, row, col)
     {      
         for(auto row = 1; row < N ; ++row)
         {

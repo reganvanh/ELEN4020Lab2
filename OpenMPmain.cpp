@@ -8,55 +8,112 @@
 #include <ctime>
 #include "matrixTransposeNaive.cpp"
 #include "matrixBlockTransposeOpenMP.cpp"
+#include "PThreadDiagonalThreading.cpp"
 
 using namespace std;
 
-// void swop(int* num1, int* num2)
-// {
-//     *num1 = *num1 + *num2;
-//     *num2 = *num1 - *num2;
-//     *num1 = *num1 - *num2; 
+int** CreateMatrix(int mSize)
+//Indicates space in memory to be allocated to the matrix
+{
+  int* Blocks = (int*) malloc(mSize*mSize*sizeof(int));
+  int** rowStart = (int**) malloc(mSize*sizeof(int*));
+  for (int i = 0; i < mSize; ++i) 
+  {
+    rowStart[i] = &Blocks[i*mSize];
+  }
+  return rowStart;
+}
 
-// }
+void InitialiseRandomMatrix(int** tempMatrix, int mSize)
+{
+//Fills allocated matrix with random numbers in a specified range
+  for (int i = 0; i < mSize; i++) 
+  {
+    for (int j = 0; j < mSize; j++) 
+    {
+      tempMatrix[i][j] = (rand()%mSize);
+    }
+  }
+}
 
 int main()
 {
-    auto matrixSize = 4096;
+    int matrixSize[4] = {128, 1024, 2048 ,4096};
     auto matrixA = vector<vector<int>>{};
     auto colVec = vector<int>{};
     auto num = 0;
     double wtime;
 
     srand(47);
-        for(auto row = 0; row < matrixSize ; ++row)
-        {
-            for(auto col = 0; col < matrixSize ; ++col)
+    for(int v = 0 ; v < 4 ; ++v)
+    {
+
+            for(auto row = 0; row < matrixSize[v] ; ++row)
             {
-                colVec.push_back(rand()%matrixSize);
-                cout << *(--colVec.end()) << " "; 
+                for(auto col = 0; col < matrixSize[v] ; ++col)
+                {
+                    colVec.push_back(rand()%matrixSize[v]);
+                    // cout << *(--colVec.end()) << " "; 
+                }
+
+                matrixA.push_back(colVec);
+                colVec.erase(colVec.begin(), colVec.end());
+                // cout << endl;
             }
 
-            matrixA.push_back(colVec);
-            colVec.erase(colVec.begin(), colVec.end());
-            cout << endl;
+        // Performing Transposition using openMP
+        double total = 0;
+
+        for(int f = 0; f < 10 ;++f)
+        {
+            wtime = omp_get_wtime ( );  //Start timing
+            
+            MatrixTransposeNaive(&matrixA);
+
+            wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+            total = total + wtime;
+
         }
-    
-        wtime = omp_get_wtime ( );  //Start timing
+        cout << "Naive Approach OpenMP: Average Time to transpose a N = " << matrixSize[v]  << " matrix : " <<  total/10 <<  " s." << endl;
         
-        MatrixTransposeNaive(&matrixA);
-
-        wtime = omp_get_wtime ( ) - wtime;  // Stop timing
-
-        cout << "Naive Approach : Time to transpose a N = " << matrixSize  << " matrix : " <<  wtime <<  " s." << endl;
-
-
-        wtime = omp_get_wtime ( );  //Start timing
-        
+        total = 0;
+        for(int f = 0; f < 10 ;++f)
+        {
+            wtime = omp_get_wtime ( );  //Start timing
+            
             blockTransposeOpenMP(&matrixA);
 
-        wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+            wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+        
+            total = total + wtime;
+        }
+            cout << "Block Method OpenMP: Time to transpose a N = " << matrixSize[v]  << " matrix : " <<  total/10.0 <<  " s." << endl;
 
-        cout << "Block Method : Time to transpose a N = " << matrixSize  << " matrix : " <<  wtime <<  " s." << endl;
+        // Performing Transposition using pThread
 
+        matrixA.erase(matrixA.begin(), matrixA.end());
+
+        int numberOfThreads = 8;
+        int size;
+        int** matrixToTranspose;
+        total = 0;
+        size = matrixSize[v];
+        matrixToTranspose = CreateMatrix(size);
+        InitialiseRandomMatrix(matrixToTranspose, size);
+
+        for(int f = 0; f< 10; ++f)
+        {
+            wtime = omp_get_wtime ( );  //Start timing
+            
+            DiagonalTransposition(matrixToTranspose, size, numberOfThreads);
+
+            wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+            total = total + wtime;
+        }
+        
+        cout << "Diagonal Method pThread: Time to transpose a N = " << matrixSize  << " matrix : " <<  total/10.0 <<  " s." << endl;
+
+        delete matrixToTranspose;
+    }
     return 0;
 }
