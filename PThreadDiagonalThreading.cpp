@@ -6,7 +6,6 @@
 struct MatrixDetails
 { int _matrixSize, _numberOfThreads, threadNumber;
   int** _matrix;
-  //int *threadNumber;
 };   
 //////////////////////////////////////////////////////////
 
