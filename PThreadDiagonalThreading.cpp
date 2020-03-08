@@ -4,7 +4,8 @@
 
 //////////////////////////////////////////////////////////
 struct MatrixDetails
-{ int _matrixSize, _numberOfThreads, threadNumber;
+{ 
+  int _matrixSize, _numberOfThreads, threadNumber;
   int** _matrix;
 };   
 //////////////////////////////////////////////////////////
@@ -12,7 +13,6 @@ struct MatrixDetails
 void* DoDiagTransposition(void *tempMatrixDetails)
 //Algorithm respondible for 2d matrix multiplication. Iterates through Matrices multiply corresponding row and column values
 //then summing them together and inserting this new value into the output matrix.
-
 {
   int ThreadNumber;
   int blockSize;

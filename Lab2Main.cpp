@@ -26,8 +26,8 @@ int** CreateMatrix(int mSize)
 }
 
 void InitialiseRandomMatrix(int** tempMatrix, int mSize)
-{
 //Fills allocated matrix with random numbers in a specified range
+{
   for (int i = 0; i < mSize; i++) 
   {
     for (int j = 0; j < mSize; j++) 
@@ -139,7 +139,7 @@ int main()
         cout << "Diagonal Method OpenMP: Time to transpose a N = " << matrixSize[v]  << " matrix : " <<  total/10.0 <<  " s." << endl;
 
         delete matrixToTranspose2;
-        
+
     }
     return 0;
 }
