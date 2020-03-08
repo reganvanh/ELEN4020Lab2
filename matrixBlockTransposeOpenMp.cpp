@@ -20,7 +20,7 @@ void blockTransposeOpenMP( vector<vector<int>>* theMatrix)
     int mSize = theMatrix->size ();
 
 
-    #pragma omp parellel for shared (matrixA, colVec, row, col)
+    #pragma omp parellel for shared (theMatrix, row, col)
     {
         for (auto row = 0; row < mSize -1; ++(++row))
         {
@@ -36,7 +36,7 @@ void blockTransposeOpenMP( vector<vector<int>>* theMatrix)
 
 
     int temp = 0;
-    #pragma omp parellel for shared (matrixA, colVec, row, col)
+    #pragma omp parellel for shared (theMatrix, row, col)
     {
         for (auto row = 0; row < mSize ; ++(++row))
         {
