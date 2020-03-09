@@ -4,8 +4,7 @@
 
 //////////////////////////////////////////////////////////
 struct MatrixDetails
-{ 
-  int _matrixSize, _numberOfThreads, threadNumber;
+{ int _matrixSize, _numberOfThreads, threadNumber;
   int** _matrix;
 };   
 //////////////////////////////////////////////////////////
@@ -13,6 +12,7 @@ struct MatrixDetails
 void* DoDiagTransposition(void *tempMatrixDetails)
 //Algorithm respondible for 2d matrix multiplication. Iterates through Matrices multiply corresponding row and column values
 //then summing them together and inserting this new value into the output matrix.
+
 {
   int ThreadNumber;
   int blockSize;
@@ -65,11 +65,11 @@ void DiagonalTransposition(int** matrixToTranspose, int matrixSize, int numberOf
   tempMatrixDetails = (struct MatrixDetails *)malloc(numberOfThreads*sizeof(MatrixDetails));
   pThreads = (pthread_t*)malloc(numberOfThreads*sizeof(pthread_t));
 
-  // printf("Matrix to Transpose \n\n");
-  // outputMatrix(matrixToTranspose, matrixSize);
-  // printf("\n");
+  //printf("Matrix to Transpose \n\n");
+  //outputMatrix(matrixToTranspose, matrixSize);
+  //printf("\n");
 
-//Each Thread deals with a portion of the matrix multiplication, with the portion to be covered being dictated by the threadNumber
+//Each Thread deaks with a portion of the matrix multiplication, with the portion to be covered being dictated by the threadNumber
 //which is a reference to a specific segment of data
   for (int i = 0; i < numberOfThreads; i++) 
   {
@@ -86,6 +86,6 @@ void DiagonalTransposition(int** matrixToTranspose, int matrixSize, int numberOf
     pthread_join(pThreads[i], NULL);
   }
 
-  // printf("\nTransposed Matirx\n\n");
-  // outputMatrix(matrixToTranspose, matrixSize);
+  //printf("\nTransposed Matirx\n\n");
+  //outputMatrix(matrixToTranspose, matrixSize);
 }

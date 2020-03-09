@@ -10,6 +10,7 @@
 #include "matrixBlockTransposeOpenMP.cpp"
 #include "PThreadDiagonalThreading.cpp"
 #include "OpenMPDiagonalThreading.cpp"
+#include "PThreadBlockOrientedThreading.cpp"
 
 using namespace std;
 
@@ -139,7 +140,28 @@ int main()
         cout << "Diagonal Method OpenMP: Time to transpose a N = " << matrixSize[v]  << " matrix : " <<  total/10.0 <<  " s." << endl;
 
         delete matrixToTranspose2;
+        
+        //------------------------------------------------------------------------
+        //Performing Block Oriented Transposition using PThread
+        //------------------------------------------------------------------------
 
+        int** matrixToTranspose3;
+        total = 0;
+        size = matrixSize[v];
+        matrixToTranspose3 = CreateMatrix(size);
+        InitialiseRandomMatrix(matrixToTranspose3, size);
+
+        for(int f = 0; f< 10; ++f)
+        {
+            wtime = omp_get_wtime ( );  //Start timing            
+            BlockOrientedTransposition(matrixToTranspose3, size, numberOfThreads);
+            wtime = omp_get_wtime ( ) - wtime;  // Stop timing
+            total = total + wtime;
+        }
+        
+        cout << "Block Method pThread: Time to transpose a N = " << matrixSize[v]  << " matrix : " <<  total/10.0 <<  " s." << endl;
+
+        delete matrixToTranspose3;
     }
     return 0;
 }
